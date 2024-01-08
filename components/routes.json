@@ -1,0 +1,228 @@
+[
+    {
+        "name": "http.8443",
+        "virtualHosts": [
+            {
+                "name": "apiqa.synectiks.net:443",
+                "domains": [
+                    "apiqa.synectiks.net"
+                ],
+                "routes": [
+                    {
+                        "match": {
+                            "prefix": "/kiali",
+                            "caseSensitive": true
+                        },
+                        "route": {
+                            "cluster": "outbound|20001||kiali.istio-system.svc.cluster.local",
+                            "prefixRewrite": "/",
+                            "timeout": "0s",
+                            "retryPolicy": {
+                                "retryOn": "connect-failure,refused-stream,unavailable,cancelled,retriable-status-codes",
+                                "numRetries": 2,
+                                "retryHostPredicate": [
+                                    {
+                                        "name": "envoy.retry_host_predicates.previous_hosts",
+                                        "typedConfig": {
+                                            "@type": "type.googleapis.com/envoy.extensions.retry.host.previous_hosts.v3.PreviousHostsPredicate"
+                                        }
+                                    }
+                                ],
+                                "hostSelectionRetryMaxAttempts": "5",
+                                "retriableStatusCodes": [
+                                    503
+                                ]
+                            },
+                            "maxGrpcTimeout": "0s"
+                        },
+                        "metadata": {
+                            "filterMetadata": {
+                                "istio": {
+                                    "config": "/apis/networking.istio.io/v1alpha3/namespaces/istio-system/virtual-service/appkube-api-vs"
+                                }
+                            }
+                        },
+                        "decorator": {
+                            "operation": "kiali.istio-system.svc.cluster.local:20001/kiali*"
+                        }
+                    },
+                    {
+                        "match": {
+                            "prefix": "/prometheus",
+                            "caseSensitive": true
+                        },
+                        "route": {
+                            "cluster": "outbound|9090||prometheus.istio-system.svc.cluster.local",
+                            "prefixRewrite": "/",
+                            "timeout": "0s",
+                            "retryPolicy": {
+                                "retryOn": "connect-failure,refused-stream,unavailable,cancelled,retriable-status-codes",
+                                "numRetries": 2,
+                                "retryHostPredicate": [
+                                    {
+                                        "name": "envoy.retry_host_predicates.previous_hosts",
+                                        "typedConfig": {
+                                            "@type": "type.googleapis.com/envoy.extensions.retry.host.previous_hosts.v3.PreviousHostsPredicate"
+                                        }
+                                    }
+                                ],
+                                "hostSelectionRetryMaxAttempts": "5",
+                                "retriableStatusCodes": [
+                                    503
+                                ]
+                            },
+                            "maxGrpcTimeout": "0s"
+                        },
+                        "metadata": {
+                            "filterMetadata": {
+                                "istio": {
+                                    "config": "/apis/networking.istio.io/v1alpha3/namespaces/istio-system/virtual-service/appkube-api-vs"
+                                }
+                            }
+                        },
+                        "decorator": {
+                            "operation": "prometheus.istio-system.svc.cluster.local:9090/prometheus*"
+                        }
+                    }
+                ],
+                "includeRequestAttemptCount": true
+            }
+        ],
+        "validateClusters": false,
+        "maxDirectResponseBodySizeBytes": 1048576,
+        "ignorePortInHostMatching": true
+    },
+    {
+        "name": "http.8080",
+        "virtualHosts": [
+            {
+                "name": "apiqa.synectiks.net:80",
+                "domains": [
+                    "apiqa.synectiks.net"
+                ],
+                "routes": [
+                    {
+                        "match": {
+                            "prefix": "/kiali",
+                            "caseSensitive": true
+                        },
+                        "route": {
+                            "cluster": "outbound|20001||kiali.istio-system.svc.cluster.local",
+                            "prefixRewrite": "/",
+                            "timeout": "0s",
+                            "retryPolicy": {
+                                "retryOn": "connect-failure,refused-stream,unavailable,cancelled,retriable-status-codes",
+                                "numRetries": 2,
+                                "retryHostPredicate": [
+                                    {
+                                        "name": "envoy.retry_host_predicates.previous_hosts",
+                                        "typedConfig": {
+                                            "@type": "type.googleapis.com/envoy.extensions.retry.host.previous_hosts.v3.PreviousHostsPredicate"
+                                        }
+                                    }
+                                ],
+                                "hostSelectionRetryMaxAttempts": "5",
+                                "retriableStatusCodes": [
+                                    503
+                                ]
+                            },
+                            "maxGrpcTimeout": "0s"
+                        },
+                        "metadata": {
+                            "filterMetadata": {
+                                "istio": {
+                                    "config": "/apis/networking.istio.io/v1alpha3/namespaces/istio-system/virtual-service/appkube-api-vs"
+                                }
+                            }
+                        },
+                        "decorator": {
+                            "operation": "kiali.istio-system.svc.cluster.local:20001/kiali*"
+                        }
+                    },
+                    {
+                        "match": {
+                            "prefix": "/prometheus",
+                            "caseSensitive": true
+                        },
+                        "route": {
+                            "cluster": "outbound|9090||prometheus.istio-system.svc.cluster.local",
+                            "prefixRewrite": "/",
+                            "timeout": "0s",
+                            "retryPolicy": {
+                                "retryOn": "connect-failure,refused-stream,unavailable,cancelled,retriable-status-codes",
+                                "numRetries": 2,
+                                "retryHostPredicate": [
+                                    {
+                                        "name": "envoy.retry_host_predicates.previous_hosts",
+                                        "typedConfig": {
+                                            "@type": "type.googleapis.com/envoy.extensions.retry.host.previous_hosts.v3.PreviousHostsPredicate"
+                                        }
+                                    }
+                                ],
+                                "hostSelectionRetryMaxAttempts": "5",
+                                "retriableStatusCodes": [
+                                    503
+                                ]
+                            },
+                            "maxGrpcTimeout": "0s"
+                        },
+                        "metadata": {
+                            "filterMetadata": {
+                                "istio": {
+                                    "config": "/apis/networking.istio.io/v1alpha3/namespaces/istio-system/virtual-service/appkube-api-vs"
+                                }
+                            }
+                        },
+                        "decorator": {
+                            "operation": "prometheus.istio-system.svc.cluster.local:9090/prometheus*"
+                        }
+                    }
+                ],
+                "includeRequestAttemptCount": true
+            }
+        ],
+        "validateClusters": false,
+        "maxDirectResponseBodySizeBytes": 1048576,
+        "ignorePortInHostMatching": true
+    },
+    {
+        "virtualHosts": [
+            {
+                "name": "backend",
+                "domains": [
+                    "*"
+                ],
+                "routes": [
+                    {
+                        "match": {
+                            "prefix": "/stats/prometheus"
+                        },
+                        "route": {
+                            "cluster": "prometheus_stats"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "virtualHosts": [
+            {
+                "name": "backend",
+                "domains": [
+                    "*"
+                ],
+                "routes": [
+                    {
+                        "match": {
+                            "prefix": "/healthz/ready"
+                        },
+                        "route": {
+                            "cluster": "agent"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

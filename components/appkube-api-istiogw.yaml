@@ -1,0 +1,46 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: appkube-api-gateway-qa
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "apiqa.synectiks.net"
+  - port:
+      number: 443
+      name: https
+      protocol: HTTP
+    # tls:
+    #   mode: SIMPLE
+    hosts:
+    - "apiqa.synectiks.net"
+     
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: appkube-api-vs
+  namespace: istio-system
+spec:
+  hosts:
+  - "apiqa.synectiks.net"
+  gateways:
+  - appkube-api-gateway-qa
+  http:
+    - match:
+      - uri:
+          prefix: "/cmdb"
+      rewrite:
+        uri: /api
+      route:
+      - destination:
+          host: appkube-cmdb-service.appkube-cmdb-service.svc.cluster.local
+          port:
+            number: 6057

@@ -1,0 +1,31 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istiocontrolplane
+  namespace: istio-system
+spec:
+  profile: empty # Do not install CRDs or the control plane
+  components:
+    ingressGateways:
+    - name: istio-ingressgateway
+      namespace: istio-system
+      enabled: true
+      label:
+        # Set a unique label for the gateway. This is required to ensure Gateways
+        # can select this workload
+        istio: ingressgateway
+    egressGateways:
+    - name: istio-egressgateway
+      namespace: istio-system
+      enabled: true
+      label:
+        istio: egressgateway
+  values:
+    gateways:
+      istio-ingressgateway:
+        serviceAnnotations:
+          service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+          service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+          service.beta.kubernetes.io/aws-load-balancer-attributes: "load_balancing.cross_zone.enabled=true"
+        # Enable gateway injection
+        injectionTemplate: gateway

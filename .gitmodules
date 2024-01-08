@@ -1,0 +1,3 @@
+[submodule "appkube-cmdb-deployment"]
+	path = appkube-cmdb-deployment
+	url = https://github.com/AppkubeCloud/appkube-cmdb-deployment.git
