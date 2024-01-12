@@ -28,11 +28,10 @@ After deployment configure kubebctl. Below is a sample command, actual is part o
 
 # Post cluster deployment
  * `istioctl install -f components/istio-ingress-egress.yaml`
- * `kubectl apply -f components/istio-addons/`
+ * `kubectl apply -f components/appkube-api-istiogw.yaml`
  * Add route 53 entry for nlb created above
 
-# cmdb service deployment
- 
+# cmdb service
  * check README from cmdb deployment repo
 
 # Cleanup

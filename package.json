@@ -1,8 +1,8 @@
 {
-  "name": "learning-eks-blueprint",
+  "name": "install-appkube-product",
   "version": "0.1.0",
   "bin": {
-    "learning-eks-blueprint": "bin/learning-eks-blueprint.js"
+    "install-appkube-product": "bin/install-appkube-product.js"
   },
   "scripts": {
     "build": "tsc",

@@ -1,3 +1,9 @@
 [submodule "appkube-cmdb-deployment"]
 	path = appkube-cmdb-deployment
 	url = https://github.com/AppkubeCloud/appkube-cmdb-deployment.git
+[submodule "common-security-rbac-deployment"]
+	path = common-security-rbac-deployment
+	url = https://github.com/AppkubeCloud/common-security-rbac-deployment.git
+[submodule "kubernetes-monitoring"]
+	path = kubernetes-monitoring
+	url = https://github.com/AppkubeCloud/kubernetes-monitoring.git
