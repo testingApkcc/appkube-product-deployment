@@ -31,16 +31,17 @@ After deployment configure kubebctl. Below is a sample command, actual is part o
  * `kubectl apply -f components/appkube-api-istiogw.yaml`
  * Add route 53 entry for nlb created above
 
-# cmdb service
+# appkube service
  * check README from cmdb deployment repo
+ * check README from security rbac deployment repo
 
 # Cleanup
- *  Uninstall cmdb service - check README from cmdb deployment repo
+ * First remove services, checkout README for service deployment 
  * `kubectl delete -f components/appkube-api-istiogw.yaml`
  * `kubectl delete -f components/istio-ingress-egress.yaml`
- * `kubectl delete -f components/istio-addons/`
  * `istioctl operator remove --purge -n istio-system` confirmation prompt should be removed
  * `istioctl uninstall --purge` # load balaner won't be deleted
  * `kubectl delete namespace istio-system`
  * `cdk destroy ak-qa-eks`
 cleanup route53 entry
+cleanup loadbalancer 
