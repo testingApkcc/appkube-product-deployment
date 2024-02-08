@@ -22,25 +22,25 @@ spec:
     hosts:
     - "apiqa.synectiks.net"
      
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: appkube-api-vs
-  namespace: istio-system
-spec:
-  hosts:
-  - "apiqa.synectiks.net"
-  gateways:
-  - appkube-api-gateway-qa
-  http:
-    - match:
-      - uri:
-          prefix: "/cmdb"
-      rewrite:
-        uri: /api
-      route:
-      - destination:
-          host: appkube-cmdb-service.appkube-cmdb-service.svc.cluster.local
-          port:
-            number: 6057
+# ---
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   name: appkube-api-vs
+#   namespace: istio-system
+# spec:
+#   hosts:
+#   - "apiqa.synectiks.net"
+#   gateways:
+#   - appkube-api-gateway-qa
+#   http:
+#     - match:
+#       - uri:
+#           prefix: "/cmdb"
+#       rewrite:
+#         uri: /api
+#       route:
+#       - destination:
+#           host: appkube-cmdb-service.appkube-cmdb-service.svc.cluster.local
+#           port:
+#             number: 6057
