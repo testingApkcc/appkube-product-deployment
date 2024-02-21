@@ -1,4 +1,4 @@
-# Welcome to appkube product deployment
+
 # prerequisities
 
 To use the eks-blueprints module, you must have nvm, node, npm, aws, istioctl, aws, aws-cdk, kubectl
