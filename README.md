@@ -1,6 +1,8 @@
 
-# prerequisities
+- [prerequisities](#prerequisities)
+- [EKS deployment ](#eks-deployment)
 
+# prerequisities
 To use the eks-blueprints module, you must have nvm, node, npm, aws, istioctl, aws, aws-cdk, kubectl
 *	Install nvm using script from NVM github page https://github.com/nvm-sh/nvm
 *	`wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash`
@@ -48,3 +50,4 @@ After deployment configure kubebctl. kubectl configuration cmd is part of 'cdk d
  * cleanup route53 entry
  * cleanup loadbalancer 
 destro
+
