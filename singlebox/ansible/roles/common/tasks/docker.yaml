@@ -31,7 +31,7 @@
     - name: Install docker-ce
       apt:
         update_cache: yes
-        name: docker-ce=5:{{ required_docker_version }}.*
+        name: docker-ce=5:{{ required_docker_version }}*
         state: present
   when: (docker_version is failed or docker_version.stdout != required_docker_version)
   become: yes

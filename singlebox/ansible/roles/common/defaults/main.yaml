@@ -1,6 +1,6 @@
 ---
 # latest tested with k8s
-required_docker_version: "25.03"
+required_docker_version: "25.0.3"
 
 kubernetes_version: 1.28.2
 
