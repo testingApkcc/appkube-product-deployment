@@ -1,6 +1,6 @@
 ---
 - name: Get docker version
-  shell: docker version -f "{% raw %}{{.Server.Version}}{% endraw %}" | awk -F "." '{print $1"."$2}'
+  shell: docker version -f "{% raw %}{{.Server.Version}}{% endraw %}" | awk -F "." '{print $1"."$2"."$3}'
   register: docker_version
   ignore_errors: True
   become: yes
