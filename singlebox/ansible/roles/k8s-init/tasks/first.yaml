@@ -1,6 +1,11 @@
 ---
+- name: Initialize kubelet 
+  shell: kubeadm init phase kubelet-start
+  become: yes
+
 - name: Initialize kubernetes master
-  shell: kubeadm init --config {{ kubeadm_conf_path }} --upload-certs > {{ kubeadm_init_log }}
+  #shell: kubeadm init --config {{ kubeadm_conf_path }} --upload-certs > {{ kubeadm_init_log }}
+  shell: kubeadm init  --upload-certs > {{ kubeadm_init_log }}
   become: yes
 
 - name: Install weave
