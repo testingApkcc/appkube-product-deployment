@@ -28,6 +28,10 @@ spec:
           service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
           # service.beta.kubernetes.io/aws-load-balancer-attributes: "load_balancing.cross_zone.enabled=true"
           serivce.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: true
+<<<<<<< HEAD
           service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "owner={{ proj-tag1 }},type=istio-gateway"
+=======
+          service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "owner=ak-qa-satya1,type=istio-gateway"
+>>>>>>> 95353ae275e55a87dcb3ee08c56c233c3d5bfd5d
         # Enable gateway injection
         injectionTemplate: gateway

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
+    "target": "ES2022",
+    "module": "CommonJS",
     "lib": [
       "es2020",
       "dom"
@@ -27,5 +27,9 @@
   "exclude": [
     "node_modules",
     "cdk.out"
-  ]
+  ],
+  "include": [
+    "lib",
+    "*.ts" // Include TypeScript files in the root directory
+]
 }

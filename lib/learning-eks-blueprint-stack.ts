@@ -1,10 +1,13 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as core from 'aws-cdk-lib/core';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
+import * as fs from 'node:fs';
+import { exec } from 'child_process';
+import * as blueprints from '@aws-quickstart/eks-blueprints';
+import * as eks from 'aws-cdk-lib/aws-eks';
 import * as fs from 'node:fs';
 import { exec } from 'child_process';
 
@@ -49,51 +52,3 @@ export class CreateRoute53ARecordForEKSNLB extends cdk.Stack {
           })
   }
 }
-
-export class LinuxTerminal {
-  run(command: string): Promise<{ error: Error | null, stdout: string, stderr: string }> {
-    return new Promise((resolve, reject) => {
-      exec(command, (error, stdout, stderr) => {
-        resolve({ error, stdout, stderr });
-      });
-    });
-  }
-}
-
-export function replaceStringInFile(filePath: string, oldString: string, newString: string): number {
-  fs.readFile(filePath, 'utf-8', (err, data) => {
-  if (err) {
-      console.error(err);
-      return -1;
-  }
-
-  let result: string;
-  try {
-    result = data.replace(new RegExp(oldString, 'g'), newString);
-  } catch (e) {
-    console.error(`Error: ${e}`);
-    return -1;
-  }
-
-  let indx: number = data.indexOf(newString) //=== -1 ? data : result;
-  console.log(`Original file content: ${data}`);
-  console.log(`Modified file content: ${result}`);
-  if (indx === -1) {
-    return -1;
-  }
-
-  fs.writeFile(filePath, result, 'utf8', (err) => {
-      if (err) {
-      console.error(err);
-      return -1;
-      }
-      console.log(`Successfully replaced ${oldString} with ${newString} in ${filePath}`);
-      return 0;
-  });
-  return 0;
-  });
-  return 0;
-}
-
-
-
