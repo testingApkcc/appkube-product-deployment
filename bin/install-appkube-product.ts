@@ -4,12 +4,13 @@ import * as blueprints from '@aws-quickstart/eks-blueprints';
 // import { CfnIPAMScope } from 'aws-cdk-lib/aws-ec2';
 // import * as iam from '@aws-cdk-lib/aws-iam';
 // import * as ec2 from '@aws-cdk-lib/aws-ec2';
-import * as fs from 'node:fs';
+
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as core from 'aws-cdk-lib/core';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import { Construct} from 'constructs';
+import * as appkubelib from '../lib/learning-eks-blueprint-stack'
 
 
 const PROJ = 'ak'; // appkube
@@ -18,7 +19,7 @@ const SETUPID = 'satya1'
 const CLUSTER_NAME = PROJ.concat('-',ENV,'-','eks')
 const TAG = PROJ.concat('-',ENV, '-', SETUPID)
 console.log("EKS Cluster name: " + CLUSTER_NAME)
-const ISTIOINGRESSYAML = '../components/appkube-ingress-egress.yaml'
+const ISTIOINGRESSYAML = 'components/istio-ingress-egress.yaml'
 const DOMAINNAME = 'synectiks.net';
 
 const app = new cdk.App();
@@ -27,12 +28,13 @@ const region = 'us-east-2';
 const version = 'auto'
 const INSTANCETYPE = 't2.xlarge' // t2.xlarge/m5.2xlarge
 
-const ret = replaceStringInFile(ISTIOINGRESSYAML, '{{ proj-tag }}', TAG)
+const ret = appkubelib.replaceStringInFile(ISTIOINGRESSYAML, '{{ proj-tag }}', TAG)
 if (ret === 0) {
-    console.log("Successfully updated " + TAG + " to " + ISTIOINGRESSYAML);
+    console.log("Inside " + ISTIOINGRESSYAML + " successfully replaced {{ proj-tag }} with " + TAG);
   } else {
     console.log(`The return value is ${ret}.`);
     process.exit(ret);
+    // exit(ret)
   }
 
 // process.exit(0);
@@ -99,55 +101,56 @@ const stack = blueprints.EksBlueprint.builder()
     .useDefaultSecretEncryption(true) // set to false to turn secret encryption off (non-production/demo cases)
     .build(app, CLUSTER_NAME);
 
-
-// Get NLB ARN
-export class CreateRoute53ARecordForEKSNLB extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-      super(scope, id, props);
-        const nlb = elbv2.NetworkLoadBalancer.fromLookup(
-            this,
-            'NLB',
-            {
-                loadBalancerTags: {
-                'owner': TAG,
-                },
-            });
-
-            // Create a CloudFormation stack output for the NLB ARN
-            new core.CfnOutput(this, 'NLBARN', {
-            value: nlb.loadBalancerArn,
-            description: 'The ARN of the Network Load Balancer',
-            });
-
-            // Create A record
-            const myzone = route53.HostedZone.fromLookup(this, 'myzone', {domainName: DOMAINNAME});
-            new route53.ARecord(this, 'AliasRecord', {
-            zone: myzone,
-            recordName: TAG + DOMAINNAME,
-            target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(nlb))
-            })
-    }
+if (process.env.CODEBUILD_BUILD_SUCCEEDING === '1') {
+    console.log('Build succeeded!');
+} else {
+    console.log('Build failed!');
 }
+// stack.build(app, CLUSTER_NAME);
 
-function replaceStringInFile(filePath: string, oldString: string, newString: string): number {
-    fs.readFile(filePath, 'utf-8', (err, data) => {
-    if (err) {
-        console.error(err);
-        return -1;
+// Run stack builder
+// app.synth();
+
+// don't skip stack builder
+
+
+
+
+// istio control plane and ingress-egress deployment commands
+var istioControlPlaneCMD = 'istioctl install -f components/istio-ingress-egress.yaml --skip-confirmation'
+var istioIngressEgressCMD = 'kubectl apply -f components/istio-ingress-egress.yaml'
+
+const myTerminal = new appkubelib.LinuxTerminal();
+myTerminal.run(istioControlPlaneCMD)
+.then(({ error, stdout, stderr }) => {
+    if (error) {
+        console.error(error);
+        process.exit(-1)
+    } else {
+        console.log(stdout);
     }
-
-    const result = data.replace(new RegExp(oldString, 'g'), newString);
-
-    fs.writeFile(filePath, result, 'utf8', (err) => {
-        if (err) {
-        console.error(err);
-        return -1;
-        }
-        console.log(`Successfully replaced ${oldString} with ${newString} in ${filePath}`);
-        return 0;
+    console.log(stderr);
+    process.exit(-1)
+    })
+    .catch((error) => {
+    console.error(error);
+    process.exit(-1)
     });
-    return 0;
-    });
-    return 0;
-}
 
+myTerminal.run(istioIngressEgressCMD)
+    .then(({ error, stdout, stderr }) => {
+    if (error) {
+        console.error(error);
+        process.exit(-1)
+    } else {
+        console.log(stdout);
+    }
+    console.log(stderr);
+    process.exit(-1)
+    })
+    .catch((error) => {
+    console.error(error);
+    process.exit(-1)
+    });
+
+// const addRoute53 = new appkubelib.CreateRoute53ARecordForEKS(this,DOMAINNAME,TAG,'');
