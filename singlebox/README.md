@@ -9,6 +9,11 @@ To run verbose mode
 ansible-playbook -vv -e "ansible_ssh_user=papu"  -e "ansible_connection=local"  -i "localhost," ansible/test.yaml
 
 # install-via-helm-chart-on-local-k8 
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
 python3 runkube.py --with-elk  --no-pull -o overlay/user_template.yml -- optscale  1.0.0
 
 helm template --debug optscale  -f overlay/user_template.yml  optscale

@@ -1,9 +1,13 @@
-- hosts: all
-  roles:
-  - common
+# - hosts: all
+#   roles:
+#   - common
  
+# - hosts: all
+#   roles:
+#   - k8s-init
+#   serial: 1
+#   order: sorted
+
 - hosts: all
   roles:
-  - k8s-init
-  serial: 1
-  order: sorted
+  - k8s-configure
