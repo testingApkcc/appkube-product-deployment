@@ -22,6 +22,37 @@ helm template  --dry-run  optscale  -f overlay/user_template.yml  optscale | awk
 
 files goes to out folder
 
+## How to debug runkube.py
+
+python3 -m debugpy --listen 0.0.0.0:5678 runkube.py --with-elk  --no-
+pull -o overlay/user_template.yml -- optscale  1.0.0
+
+Have launch.json as follows :
+
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Remote Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "10.0.0.3",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/optscale-deploy",
+                    "remoteRoot": "."
+                }
+            ]
+        }
+    ]
+}
+
 # some important kubeadm commands
 
 kubeadm init --config /tmp/kubeadm-init.conf --upload-certs
