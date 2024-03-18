@@ -23,7 +23,7 @@
   become: yes
 
 - name: Enable scheduling on master node
-  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  shell: kubectl taint nodes --all node-role.kubernetes.io/control-palne-
   ignore_errors: true
   run_once: true
 
@@ -31,20 +31,20 @@
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
   run_once: true
 
-- import_tasks: helm.yaml
+# - import_tasks: helm.yaml
 
-- name: Fix helm cluster roles
-  shell: kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
-  ignore_errors: true
-  run_once: true
+# - name: Fix helm cluster roles
+#   shell: kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+#   ignore_errors: true
+#   run_once: true
 
-- name: Wait untill Tiller is up and running
-  shell: kubectl --namespace kube-system get pods | awk '/tiller/ { print $0 }'
-  register: result
-  until: (result.stdout.find("Running") != -1) and (result.stdout.find("1/1") != -1)
-  retries: 30
-  delay: 10
-  run_once: true
+# - name: Wait untill Tiller is up and running
+#   shell: kubectl --namespace kube-system get pods | awk '/tiller/ { print $0 }'
+#   register: result
+#   until: (result.stdout.find("Running") != -1) and (result.stdout.find("1/1") != -1)
+#   retries: 30
+#   delay: 10
+#   run_once: true
 
 - name: Copy openssl config
   template:
@@ -60,30 +60,35 @@
   ignore_errors: true
   run_once: true
 
+# - name: Add Helm repos
+#   shell: helm repo add {{ item }}
+#   with_items:
+#     - stable https://charts.helm.sh/stable
+
 - name: Add Helm repos
   shell: helm repo add {{ item }}
   with_items:
-    - stable https://charts.helm.sh/stable
+    - ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 - name: Update Helm repos
   shell: helm repo update
 
 - name: Install nginx ingress controller
-  shell: helm upgrade --install ngingress stable/nginx-ingress --set rbac.create=true --set controller.hostNetwork=true --set controller.extraArgs.default-ssl-certificate=default/defaultcert --set controller.kind=DaemonSet
+  shell: helm upgrade --install ngingress ingress-nginx/ingress-nginx --set rbac.create=true --set controller.hostNetwork=true --set controller.extraArgs.default-ssl-certificate=default/defaultcert --set controller.kind=DaemonSet
   run_once: true
 
-- name: Copy custom nginx-ingress chart
-  copy:
-    src: nginx-ingress
-    dest: "{{ ansible_env.HOME }}"
-    owner: "{{ ansible_ssh_user }}"
-    group: "{{ ansible_ssh_user }}"
-    mode: 0644
-  run_once: true
+# - name: Copy custom nginx-ingress chart
+#   copy:
+#     src: nginx-ingress
+#     dest: "{{ ansible_env.HOME }}"
+#     owner: "{{ ansible_ssh_user }}"
+#     group: "{{ ansible_ssh_user }}"
+#     mode: 0644
+#   run_once: true
 
-- name: Install etcd-operator
-  shell: helm upgrade --install etcd-operator --set backupOperator.replicaCount=0 --set restoreOperator.replicaCount=0 stable/etcd-operator --set etcdOperator.image.pullPolicy=IfNotPresent
-  run_once: true
+# - name: Install etcd-operator
+#   shell: helm upgrade --install etcd-operator --set backupOperator.replicaCount=0 --set restoreOperator.replicaCount=0 stable/etcd-operator --set etcdOperator.image.pullPolicy=IfNotPresent
+#   run_once: true
 
 - name: Check domain presence
   shell: kubectl get cm -o json coredns -n kube-system | grep -v "last-applied-configuration" | grep "dts.loc"
