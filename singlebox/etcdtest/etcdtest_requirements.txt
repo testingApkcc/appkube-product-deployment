@@ -1,0 +1,2 @@
+# OptScale packages
+-e ./optscale_client/config_client
