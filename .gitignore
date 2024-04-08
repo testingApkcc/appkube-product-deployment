@@ -3,6 +3,7 @@
 *.d.ts
 node_modules
 ./singlebox/etcdtest/.venv/*
+./singlebox/.venv/*
 # CDK asset staging directory
 .cdk.staging
 cdk.out

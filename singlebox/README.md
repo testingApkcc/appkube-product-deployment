@@ -240,3 +240,18 @@ kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 ## To run as root
 export KUBECONFIG=/etc/kubernetes/admin.conf
+
+## How to export docker images to crictl discovered image
+
+crictl --image-endpoint unix:///run/containerd/containerd.sock image ls
+crictl --image-endpoint  unix:///run/containerd/containerd.sock rmi docker.io/library/hostpath-provisioner
+docker save image -o image.tar
+ctr -n=k8s.io images import image.tar
+
+## How to debug the service
+
+Run a busybox for debug
+kubectl run -i --tty --rm debug --image=busybox --restart=Never -- sh
+use netcat tools etc for connecting service
+
+

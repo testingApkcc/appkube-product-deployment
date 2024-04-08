@@ -1,0 +1,4 @@
+ansible
+PyYAML
+kubernetes
+docker

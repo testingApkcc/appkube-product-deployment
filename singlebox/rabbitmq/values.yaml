@@ -1,0 +1,25 @@
+# Default values for optscale.
+
+tag: &tag local
+
+rabbitmq:
+  name: &rabbit_name rabbitmq
+  replicaCount: 1
+  mnesiaSize: 10Gi
+  memory_limit: 512
+  image:
+    id:
+    pullPolicy: IfNotPresent
+  service:
+    name: *rabbit_name
+    type: ClusterIP
+    externalPort: 5672
+    internalPort: 5672
+    managerPort: 15672
+    empdPort: 4369
+  credentials:
+    username: optscale
+    password: secure-password-here
+    cookie: dWkhXehOApH1OHshvByfpfTf3Cd8wwkADei7mWd5JF
+
+clusterDomain: cluster.local

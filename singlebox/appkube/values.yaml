@@ -1,0 +1,77 @@
+# Default values for optscale.
+
+tag: &tag local
+
+elk:
+  enabled: false
+  name: &elk_name elk
+  es_connect_retry: "90"
+  ls_heap_size: 2g
+  es_heap_size: 1g
+  image:
+    id:
+    repository: *elk_name
+    tag: *tag
+    pullPolicy: Never
+  service:
+    name: *elk_name
+    elastic_port: &ex_port 9200
+    externalPort: *ex_port
+    logstash_tcp_port: 32201
+    logstash_udp_port: 32201
+    internal_kibana_port: 80
+    external_kibana_port: 30081
+  env:
+    htpasswd_user: userforelk
+    htpasswd_pass: passwordforelk
+
+rabbitmq:
+  name: &rabbit_name rabbitmq
+  replicaCount: 1
+  mnesiaSize: 10Gi
+  memory_limit: 512
+  image:
+    id:
+    pullPolicy: IfNotPresent
+  service:
+    name: *rabbit_name
+    type: ClusterIP
+    externalPort: 5672
+    internalPort: 5672
+    managerPort: 15672
+    empdPort: 4369
+  credentials:
+    username: optscale
+    password: secure-password-here
+    cookie: dWkhXehOApH1OHshvByfpfTf3Cd8wwkADei7mWd5JF
+
+redis:
+  name: &redis_name redis
+  replicaCount: 1
+  image:
+    id:
+    repository: *redis_name
+    tag: *tag
+    pullPolicy: Never
+  service:
+    name: *redis_name
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 6379
+
+    
+influxdb:
+  name: &influx_name influxdb
+  replicaCount: 1
+  image:
+    id:
+    repository: *influx_name
+    tag: *tag
+    pullPolicy: Never
+  service:
+    name: *influx_name
+    type: ClusterIP
+    externalPort: &influx_external_port 80
+    internalPort: 8086
+
+clusterDomain: cluster.local
