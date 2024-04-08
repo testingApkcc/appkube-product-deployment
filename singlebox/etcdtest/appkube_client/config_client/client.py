@@ -25,9 +25,9 @@ class CounterOverflowException(Exception):
 
 
 def _should_retry(exception):
-    if isinstance(exception, (etcd.EtcdConnectionFailed, RetriableException)):
+    if isinstance(exception, (etcd3.EtcdConnectionFailed, RetriableException)):
         return True
-    if isinstance(exception, etcd.EtcdException):
+    if isinstance(exception, etcd3.EtcdException):
         # internal error. appears on etcd service restart
         if exception.payload["errorCode"] == ETCD_CODE_INTERNAL_ERROR:
             return True
@@ -35,10 +35,10 @@ def _should_retry(exception):
 
 
 def _retry_not_exist(exception):
-    return isinstance(exception, etcd.EtcdKeyNotFound)
+    return isinstance(exception, etcd3.EtcdKeyNotFound)
 
 
-class Client(etcd3.Client):
+class Client(etcd3.Etcd3Client):
     """ OptScale config client """
 
     @retry(**DEFAULT_RETRY_ARGS, retry_on_exception=_should_retry)
@@ -112,7 +112,7 @@ class Client(etcd3.Client):
                 if overwrite_lists:
                     try:
                         self.delete(full_key, recursive=True)
-                    except etcd.EtcdKeyNotFound:
+                    except etcd3.EtcdKeyNotFound:
                         pass
                 for val in value:
                     self.write(key=full_key, value=val, append=True)

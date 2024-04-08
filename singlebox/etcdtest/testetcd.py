@@ -9,24 +9,26 @@ import os
 import sys
 import time
 
-import yaml
+# import yaml
 import subprocess
 from urllib.parse import urlsplit
 # from optscale_client.config_client.client import Client as EtcdClient
-from optscale_client.config_client.client import Client as EtcdClient
+from appkube_client.config_client.client import Client as EtcdClient
 
 
 DESCRIPTION = "Script to test etcd connection"
 
 class TestEtcd:
-    def __init__(self, host='etcd', port=2379, protocol='https',version_prefix='/v3',cert='/etc/kubernetes/pki/etcd/peer.crt',ca_cert='/etc/kubernetes/pki/etcd/ca.crt'):
+    def __init__(self, host='etcd', port=2379, cert_cert='/etc/kubernetes/pki/etcd/peer.crt',ca_cert='/etc/kubernetes/pki/etcd/ca.crt',cert_key='/etc/kubernetes/pki/etcd/peer.key'):
         # self.config = yaml.load(open(config_path, 'r'))
-        self.etcd_cl = EtcdClient(host=host, port=port, protocol='https',version_prefix='/v3',cert='/etc/kubernetes/pki/etcd/peer.crt',ca_cert='/etc/kubernetes/pki/etcd/ca.crt')
+        self.etcd_cl = EtcdClient(host=host, port=port,cert_cert='/etc/kubernetes/pki/etcd/peer.crt',ca_cert='/etc/kubernetes/pki/etcd/ca.crt',cert_key='/etc/kubernetes/pki/etcd/peer.key')
         # config = self.config['etcd']
 
     def start(self):
         # self.etcd_cl.write('/registry_ready', 0)
-        self.etcd_cl.get('/configured')
+        logging.log("str1: %s", self.etcd_cl.get('/configured'))
+        # logging.log(self.etcd_cl.get('/configured'))
+        # self.etcd_cl.
         
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
@@ -37,4 +39,3 @@ if __name__ == '__main__':
     else:
         conf = TestEtcd(host=etcd_host, port=etcd_port)
     conf.start()
-
